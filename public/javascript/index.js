@@ -11,8 +11,8 @@ const pokemons = {
     attack2:{
          SCRATCH: 3 },
     attack3: {
-         GROWL: 3 }       
-    },              
+         GROWL: 0 }       
+    },             
     
     pokemon2: {
         nombre: "SQUIRTLE",
@@ -23,7 +23,7 @@ const pokemons = {
        attack2:{
             TACKLE: 3 },
        attack3: {
-            THAIL_WHIP: 3 }       
+            THAIL_WHIP: 0 }       
     },
 
     pokemon3: {
@@ -37,42 +37,31 @@ const pokemons = {
    attack3: {
         SOLARBEAM: 12 }       
    }
- }
-//                                              FILTROS PARA PROGRAMAR EL EFECTO DE LOS ATAQUES EN EL RIVAL
+}
+const arrayPokemons = [pokemons.pokemon1, pokemons.pokemon2, pokemons.pokemon3] // CREO ARRAY DE OBJETOS PARA PODER USAR EL METODO RANDOM
+
+//                                                                  FILTROS PARA PROGRAMAR EL EFECTO DE LOS ATAQUES EN EL RIVAL
 
  const ataquesOfensivos = ["EMBER", "SCRATCH", "WATER_GUN", "TACKLE", "VINE_WHIP"]
 
- const ataquesBajanDefensa = ["THAIL_WHIP"]
+                                                        // FUNCION PARA SELECCIONAR RIVAL RANDOM
 
- const ataquesBajanAtaque = ["GROWL"]
+ let random = Math.floor(Math.random()* arrayPokemons.length)
+ let rivalRandom = arrayPokemons[random] //Es el objeto literal!
+ console.log(rivalRandom)
 
+
+                                                    //VARIABLE PARA PROGRAMAR SOLARBEAM
+let ataquesDe2Turnos = false
 
                                                                 //  ELECCION DE POKEMON Y ASIGNACIÓN DE RIVAL (LOS OBJETOS LITERALES)
 
 let pokemonElegido // Es el objeto literal
 
-let pokemonRival // Es el objeto literal
-
 let nombrePokemonElegido //Nombre del objeto
 
 let nombrePokemonRival // Nombre del objeto
 
-function seleccionarRival() {
-    if (pokemonElegido == pokemons.pokemon1) {
-        pokemonRival = pokemons.pokemon2
-        nombrePokemonRival = pokemonRival
-        alert(`Comienza la batalla!, tu pokemon es ${nombrePokemonElegido} tu rival es ${pokemonRival.nombre}`)
-        
-    }else if (pokemonElegido == pokemons.pokemon2) {
-        pokemonRival = pokemons.pokemon3
-        nombrePokemonRival = pokemonRival
-        alert(`Comienza la batalla!, tu pokemon es ${nombrePokemonElegido} tu rival es ${pokemonRival.nombre}`)       
-    }else{ 
-        pokemonRival = pokemons.pokemon1
-        nombrePokemonRival = pokemonRival
-        alert(`Comienza la batalla!, tu pokemon es ${nombrePokemonElegido} tu rival es ${pokemonRival.nombre}`)
-    }    
-}
 
 
 let eleccionPokemon = prompt("escribe el numero del pokemon que quieres utilizar: 1)CHARMANDER 2)SQUIRTLE o 3)BULBASAUR")
@@ -80,17 +69,23 @@ let eleccionPokemon = prompt("escribe el numero del pokemon que quieres utilizar
         case "1":
            pokemonElegido = pokemons.pokemon1;
            nombrePokemonElegido = pokemonElegido.nombre
-           seleccionarRival()           
+           nombrePokemonRival = rivalRandom.nombre
+    alert(`Comienza la batalla!, tu pokemon es ${nombrePokemonElegido} tu rival es ${rivalRandom.nombre}`)
+             
             break;
         case "2":
              pokemonElegido = pokemons.pokemon2
              nombrePokemonElegido = pokemonElegido.nombre
-             seleccionarRival()
+             nombrePokemonRival = rivalRandom.nombre
+    alert(`Comienza la batalla!, tu pokemon es ${nombrePokemonElegido} tu rival es ${rivalRandom.nombre}`)
+    
              break;
         case "3":
              pokemonElegido = pokemons.pokemon3
              nombrePokemonElegido = pokemonElegido.nombre
-             seleccionarRival()
+             nombrePokemonRival = rivalRandom.nombre
+             alert(`Comienza la batalla!, tu pokemon es ${nombrePokemonElegido} tu rival es ${rivalRandom.nombre}`)
+             
              break;    
         default:
             alert("El pokemon elegido no esta disponible")
@@ -99,21 +94,33 @@ let eleccionPokemon = prompt("escribe el numero del pokemon que quieres utilizar
 
 //                                                                 CUADRO DE SELECCION DE ATAQUES
 
-let keysAttacks // para que aparezcan los ataques prolijos en el prompt
+let keysAttacks // aca atrapo a todos los nombres de los ataques para que salgan prolijos en el prompt
 
                                                                     // VIDA DE LOS POKEMONS!!!
 let vida = pokemonElegido.life
 
-let vidaRival = pokemonRival.life
-                                    // VALORES DE LOS ATAQUES POKEMON ELEGIDO Y POKEMON RIVAL (ESTAS VARIABLES SOLO SE USAN PARA CALCULAR EL EFECTO DEL GROWL O THAIL WHIP)
+let vidaRival = rivalRandom.life
+                                    // VALORES DE LOS ATAQUES POKEMON ELEGIDO Y POKEMON RIVAL (ESTAS VARIABLES SOLO SE USAN PARA CALCULAR EL EFECTO DEL GROWL O THAIL WHIP y EFECTIVIDAD)
 
 let attack1PokemonElegido = Object.values(pokemonElegido.attack1)
 let attack2PokemonElegido = Object.values(pokemonElegido.attack2)
 let attack3PokemonElegido = Object.values(pokemonElegido.attack3)
 
-let attack1PokemonRival = Object.values(pokemonRival.attack1)
-let attack2PokemonRival = Object.values(pokemonRival.attack2)
-let attack3PokemonRival = Object.values(pokemonRival.attack3)
+let attack1PokemonRival = Object.values(rivalRandom.attack1)
+let attack2PokemonRival = Object.values(rivalRandom.attack2)
+let attack3PokemonRival = Object.values(rivalRandom.attack3)
+
+                                                    //FUNCION PARA CALCULAR EFECTIVIDAD (Solo se aplica al primer ataque que es del tipo fuego, agua o planta) Al SOLARBEAM no lo bajo por FIACA!!
+function efectividad () {
+    if (pokemonElegido.tipo == "fuego" && rivalRandom.tipo == "planta" || pokemonElegido.tipo == "agua" && rivalRandom.tipo == "fuego" ||  pokemonElegido.tipo == "planta" && rivalRandom.tipo == "agua"){
+        attack1PokemonElegido = parseInt(attack1PokemonElegido) + (20 * parseInt(attack1PokemonElegido) / 100)
+        attack1PokemonRival = parseInt(attack1PokemonRival) - (20 * parseInt(attack1PokemonRival) / 100)    
+    } else if (pokemonElegido.tipo == "fuego" && rivalRandom.tipo == "agua" || pokemonElegido.tipo == "agua" && rivalRandom.tipo == "planta" || pokemonElegido.tipo == "planta" && rivalRandom.tipo == "fuego"){
+        attack1PokemonElegido = parseInt(attack1PokemonElegido) - (20 * parseInt(attack1PokemonElegido) / 100)
+        attack1PokemonRival = parseInt(attack1PokemonRival) + (20 * parseInt(attack1PokemonRival) / 100)        
+    }
+}
+
 
                                                 // FUNCION PARA OBTENER SOLO EL NOMBRE DEL ATAQUE EN EL CUADRO DE SELECCION
 function nombresDeAtaques() {
@@ -125,8 +132,9 @@ function nombresDeAtaques() {
 
 nombresDeAtaques() 
 
-let ataqueSeleccionado //ataque del pokemon elegido (object)
-let ataqueRival = pokemonRival.attack1 //primer ataque rival definido (object)
+let ataqueSeleccionado //ES EL OBJETO
+let valorAtaqueSeleccionado // ES EL VALOR (NUM)
+let ataqueRival = rivalRandom.attack1 // ataque predefinido (LO TENGO QUE CAAMBIAR)
 
 let opcionesDeAtaque = prompt(`Tu pokemon es ${nombrePokemonElegido}, escriba el numero del ataque que desea efectuar: ${keysAttacks} ----LIFE:  ${vida}`)
 
@@ -134,51 +142,58 @@ let opcionesDeAtaque = prompt(`Tu pokemon es ${nombrePokemonElegido}, escriba el
 
 function seleccion() {
     if (opcionesDeAtaque == 1){
-       return ataqueSeleccionado = pokemonElegido.attack1
+        ataqueSeleccionado = pokemonElegido.attack1
+        valorAtaqueSeleccionado = attack1PokemonElegido
     } else if (opcionesDeAtaque == 2){
-       return ataqueSeleccionado = pokemonElegido.attack2
+        ataqueSeleccionado = pokemonElegido.attack2
+        valorAtaqueSeleccionado = attack2PokemonElegido
     }else if (opcionesDeAtaque == 3) {
-       return ataqueSeleccionado = pokemonElegido.attack3
+        ataqueSeleccionado = pokemonElegido.attack3
+        valorAtaqueSeleccionado = attack3PokemonElegido
     } else{
         alert("no eligio un numero valido")
+        
     }    
 }
 
+efectividad()
 seleccion()
 
-let nombreAtaqueSeleccionado = Object.keys(ataqueSeleccionado) // nombre del ataque (string)
-let nombreAtaqueRival = Object.keys(ataqueRival) // nombre del ataque (string)
+let nombreAtaqueSeleccionado = Object.keys(ataqueSeleccionado) // variable del nombre del ataque para que salga en el alert
+let nombreAtaqueRival = Object.keys(ataqueRival)
 
 
-function calcularDaño() {
-    return vidaRival = vidaRival - Object.values(ataqueSeleccionado)    
-}
+
+                                  
+
 //                                              FUNCION PARA CALCULAR EL EFECTO DE GROWL Y THAIL WHIP
 
 function ataqueNoOfensivo() {
     if (nombreAtaqueSeleccionado == "GROWL"){
-        attack1PokemonRival = attack1PokemonRival - 2
-        attack2PokemonRival = attack2PokemonRival - 2 
-        attack3PokemonRival = attack3PokemonRival - 2    
+        attack1PokemonRival = attack1PokemonRival - (20 * attack1PokemonRival / 100)
+        attack2PokemonRival = attack2PokemonRival - (20 * attack2PokemonRival / 100)
+        attack3PokemonRival = attack3PokemonRival - (20 * attack3PokemonRival / 100)    
     } else if (nombreAtaqueSeleccionado == "THAIL_WHIP") {
-        attack1PokemonElegido = parseInt(attack1PokemonElegido) + 2
-        attack2PokemonElegido = parseInt(attack2PokemonElegido) + 2
-        attack3PokemonElegido = parseInt(attack3PokemonElegido) + 2
+        attack1PokemonElegido = parseInt(attack1PokemonElegido) + (20 * parseInt(attack1PokemonElegido) / 100)
+        attack2PokemonElegido = parseInt(attack2PokemonElegido) + (20 * parseInt(attack2PokemonElegido) / 100)
+        attack3PokemonElegido = parseInt(attack3PokemonElegido) + (20 * parseInt(attack3PokemonElegido) / 100)
     } else {
-
+        ataquesDe2Turnos = true //Esto es cuando elegis SOLARBEAM, porque no hay otro ataque posible
     }  
 }
 
 function batalla () {
-    alert(`${nombrePokemonElegido} uso ${nombreAtaqueSeleccionado}`)
+    alert(`${nombrePokemonElegido} uso ${nombreAtaqueSeleccionado}`) //Enunciado del ataque
+    if (nombreAtaqueSeleccionado == "SOLARBEAM"){
+        alert(`${nombrePokemonElegido} esta cargando poder`)
+    }
     ataquesOfensivos.forEach(elem =>{
         if (elem == nombreAtaqueSeleccionado){
-            calcularDaño()
+            return vidaRival = vidaRival - valorAtaqueSeleccionado  
         }else{
                        
         }
-    })
-    
+    })    
     ataqueNoOfensivo()            
 }
 

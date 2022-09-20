@@ -197,9 +197,9 @@ function noEsEfectivo(){
         alert(`No es muy efectivo! a ${nombrePokemonRival} le quedan ${vidaRival} puntos de vida`)
     }
 }
-
+//                                                      FUNCION PARA DETERMINAR SI EL ATAQUE FALLA O NO
 function ataqueErrado(){
-    fallo = 1 //Math.floor(Math.random()* 10)
+    fallo = Math.floor(Math.random()* 10)
     fallo > 4 ? fallo = true : fallo = false
     return console.log(fallo)
 
@@ -208,7 +208,6 @@ function ataqueErrado(){
 
 function batalla () {
     alert(`${nombrePokemonElegido} uso ${nombreAtaqueSeleccionado}`) //Enunciado del ataque
-    debugger
     if (nombreAtaqueSeleccionado == "SOLARBEAM"){
         alert(`${nombrePokemonElegido} esta cargando poder`)
         ataquesDe2Turnos = true // Cambio a true para programar el ataque en el proximo turno
@@ -224,26 +223,15 @@ function batalla () {
             alert(`${nombrePokemonElegido} fallo el ataque!`)
         }
     } else {
-        ataqueNoOfensivo()        
+        ataqueErrado()
+        if (fallo == true){
+            ataqueNoOfensivo() 
+        } else {
+            alert(`${nombrePokemonElegido} fallo el ataque!`)
+        }
+               
     }              
 }
-
-            //PRIMERA ESTRUCTURA DE LA FUNCION BATALLA
-    // ataquesOfensivos.forEach(elem =>{
-        
-    //     if (elem == nombreAtaqueSeleccionado){
-    //         ataqueErrado() //Aca obtengo el valor de la variable fallo (true o false)                               
-    //     }
-    //     if (fallo == true){
-    //         esEfectivo()
-    //         noEsEfectivo()
-    //     } else {
-    //         alert(`${pokemonElegido} fallo el ataque!`)
-    //     }
-       
-    // })    
-    // ataqueNoOfensivo()            
-
 
 batalla()
 

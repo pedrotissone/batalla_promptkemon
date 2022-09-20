@@ -47,12 +47,14 @@ const arrayPokemons = [pokemons.pokemon1, pokemons.pokemon2, pokemons.pokemon3] 
                                                         // FUNCION PARA SELECCIONAR RIVAL RANDOM
 
  let random = Math.floor(Math.random()* arrayPokemons.length)
- let rivalRandom = arrayPokemons[random] //Es el objeto literal!
+ let rivalRandom = pokemons.pokemon3 //arrayPokemons[random] //Es el objeto literal!
  console.log(rivalRandom)
 
 
                                                     //VARIABLE PARA PROGRAMAR SOLARBEAM
 let ataquesDe2Turnos = false
+
+let fallo //Variable para programar si falla o no el ataque
 
                                                                 //  ELECCION DE POKEMON Y ASIGNACIÓN DE RIVAL (LOS OBJETOS LITERALES)
 
@@ -172,30 +174,76 @@ function ataqueNoOfensivo() {
     if (nombreAtaqueSeleccionado == "GROWL"){
         attack1PokemonRival = attack1PokemonRival - (20 * attack1PokemonRival / 100)
         attack2PokemonRival = attack2PokemonRival - (20 * attack2PokemonRival / 100)
-        attack3PokemonRival = attack3PokemonRival - (20 * attack3PokemonRival / 100)    
+        attack3PokemonRival = attack3PokemonRival - (20 * attack3PokemonRival / 100)
+        alert(`El poder de ataque de ${nombrePokemonRival} ha disminuido!`)    
     } else if (nombreAtaqueSeleccionado == "THAIL_WHIP") {
         attack1PokemonElegido = parseInt(attack1PokemonElegido) + (20 * parseInt(attack1PokemonElegido) / 100)
         attack2PokemonElegido = parseInt(attack2PokemonElegido) + (20 * parseInt(attack2PokemonElegido) / 100)
         attack3PokemonElegido = parseInt(attack3PokemonElegido) + (20 * parseInt(attack3PokemonElegido) / 100)
-    } else {
-        ataquesDe2Turnos = true //Esto es cuando elegis SOLARBEAM, porque no hay otro ataque posible
-    }  
+        alert(`El poder defensivo de ${nombrePokemonRival} ha disminuido!`)   
+    }
 }
+//                                                                  FUNCIONES PARA CALCULAR SI EL ATAQUE ES SUPER EFECTIVO O NO
+function esEfectivo() {  
+        if (ataqueSeleccionado == pokemonElegido.attack1 && (pokemonElegido.tipo == "fuego" && rivalRandom.tipo == "planta" || pokemonElegido.tipo == "agua" && rivalRandom.tipo == "fuego" ||  pokemonElegido.tipo == "planta" && rivalRandom.tipo == "agua") ){    
+        vidaRival = vidaRival - valorAtaqueSeleccionado
+        alert(`Es super efectivo! a ${nombrePokemonRival} le quedan ${vidaRival} puntos de vida`)
+    }
+}
+
+function noEsEfectivo(){
+    if ( (pokemonElegido.tipo == "fuego" && rivalRandom.tipo == "agua" || pokemonElegido.tipo == "agua" && rivalRandom.tipo == "planta" || pokemonElegido.tipo == "planta" && rivalRandom.tipo == "fuego") && ataqueSeleccionado == pokemonElegido.attack1){
+        vidaRival = vidaRival - valorAtaqueSeleccionado
+        alert(`No es muy efectivo! a ${nombrePokemonRival} le quedan ${vidaRival} puntos de vida`)
+    }
+}
+
+function ataqueErrado(){
+    fallo = 1 //Math.floor(Math.random()* 10)
+    fallo > 4 ? fallo = true : fallo = false
+    return console.log(fallo)
+
+}
+
 
 function batalla () {
     alert(`${nombrePokemonElegido} uso ${nombreAtaqueSeleccionado}`) //Enunciado del ataque
+    debugger
     if (nombreAtaqueSeleccionado == "SOLARBEAM"){
         alert(`${nombrePokemonElegido} esta cargando poder`)
-    }
-    ataquesOfensivos.forEach(elem =>{
-        if (elem == nombreAtaqueSeleccionado){
-            return vidaRival = vidaRival - valorAtaqueSeleccionado  
-        }else{
-                       
+        ataquesDe2Turnos = true // Cambio a true para programar el ataque en el proximo turno
+    }   
+
+    let comprobacion = ataquesOfensivos.find(elem => elem == nombreAtaqueSeleccionado)
+    if (comprobacion != undefined){
+        ataqueErrado()
+        if (fallo == true){
+            esEfectivo()
+            noEsEfectivo()
+        } else {
+            alert(`${nombrePokemonElegido} fallo el ataque!`)
         }
-    })    
-    ataqueNoOfensivo()            
+    } else {
+        ataqueNoOfensivo()        
+    }              
 }
+
+            //PRIMERA ESTRUCTURA DE LA FUNCION BATALLA
+    // ataquesOfensivos.forEach(elem =>{
+        
+    //     if (elem == nombreAtaqueSeleccionado){
+    //         ataqueErrado() //Aca obtengo el valor de la variable fallo (true o false)                               
+    //     }
+    //     if (fallo == true){
+    //         esEfectivo()
+    //         noEsEfectivo()
+    //     } else {
+    //         alert(`${pokemonElegido} fallo el ataque!`)
+    //     }
+       
+    // })    
+    // ataqueNoOfensivo()            
+
 
 batalla()
 

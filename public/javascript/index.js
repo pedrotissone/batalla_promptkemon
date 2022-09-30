@@ -205,23 +205,18 @@ function comprobarSiElAtaqueEsEfectivo() {
 //                                                      FUNCION PARA DETERMINAR SI EL ATAQUE FALLA O NO
 function ataqueErrado(){
     fallo = Math.floor(Math.random()* 10)
-    fallo > 1 ? fallo = true : fallo = false // le pongo 1 para que no falle casi nunca, despues lo modifico!!
+    fallo > 2 ? fallo = true : fallo = false // le pongo 1 para que no falle casi nunca, despues lo modifico!!
 }
 
 
-function primerTurno () {
-    // if (ataquesDe2Turnos == true){
-    //     alert(`${nombrePokemonElegido} uso SOLARBEAM`)
-    //     ataquesDe2Turnos = false
-    // }
+function primerTurno () {    
 
     alert(`${nombrePokemonElegido} uso ${nombreAtaqueSeleccionado}`) //Enunciado del ataque
     if (nombreAtaqueSeleccionado == "SOLARBEAM"){
         alert(`${nombrePokemonElegido} esta cargando poder`)
         ataquesDe2Turnos = true // Cambio a true para programar el ataque en el proximo turno
-    }   
-
-    let comprobacion = ataquesOfensivos.find(elem => elem == nombreAtaqueSeleccionado)
+    }else{
+        let comprobacion = ataquesOfensivos.find(elem => elem == nombreAtaqueSeleccionado)
     if (comprobacion != undefined){
         ataqueErrado()
         if (fallo == true){
@@ -235,9 +230,9 @@ function primerTurno () {
             ataqueNoOfensivo() 
         } else {
             alert(`${nombrePokemonElegido} fallo el ataque!`)
-        }
-               
-    }              
+        }               
+    }
+    }               
 }
 
 primerTurno()
@@ -272,7 +267,6 @@ function ataqueNoOfensivoRival() {
 }
 
 function seleccionAtaqueRival() {
-    debugger
     ataqueRival = Math.floor(Math.random() * 15)
     if (ataqueRival <= 5){
        ataqueRival = rivalRandom.attack1
@@ -292,15 +286,14 @@ function seleccionAtaqueRival() {
 seleccionAtaqueRival()
 
 
-function segundoTurno(){
+function segundoTurno(){    
     alert (`El ${nombrePokemonRival} rival uso ${nombreAtaqueRival}`)
 
     if (nombreAtaqueRival == "SOLARBEAM"){
         alert(`El ${nombrePokemonRival} rival esta cargando poder`)
         ataquesDe2TurnosRival = true // Cambio a true para programar el ataque en el proximo turno
-    }
-    
-    let comprobacion = ataquesOfensivos.find(elem => elem == nombreAtaqueRival)
+    }else{
+        let comprobacion = ataquesOfensivos.find(elem => elem == nombreAtaqueRival)
     if (comprobacion != undefined){
         ataqueErrado()
         if (fallo == true){
@@ -316,6 +309,7 @@ function segundoTurno(){
             alert(`El ${nombrePokemonRival} rival fallo el ataque!`)
         }               
     }
+    }    
 }
 
 segundoTurno()
@@ -323,17 +317,30 @@ segundoTurno()
 //                  UNA VEZ FINALIZADOS LOS DOS PRIMEROS TURNOS SE PROGRAMA QUE SE REPITAN HASTA QUE LA VIDA DE ALGUNO DE LOS 2 POKEMONES LLEGUE A 0
 
 function batalla(){
-    opcionesDeAtaque = prompt(`Tu pokemon es ${nombrePokemonElegido}, escriba el numero del ataque que desea efectuar: ${keysAttacks} ----LIFE:  ${vida}`)
-    seleccion()
-    primerTurno()
-    if (vidaRival > 0){ //Si con el ataque de pokemonElegido mato al rival ya no dejo que programe otro ataque
-        seleccionAtaqueRival()
-        segundoTurno()
-    } else{
-        
+    if (ataquesDe2Turnos == true){
+        alert(`${nombrePokemonElegido} descargó el poder del SOLARBEAM!`)
+        comprobarSiElAtaqueEsEfectivo()
+        ataquesDe2Turnos = false
+    }else{
+        opcionesDeAtaque = prompt(`Tu pokemon es ${nombrePokemonElegido}, escriba el numero del ataque que desea efectuar: ${keysAttacks} ----LIFE:  ${vida}`)
+        seleccion()
+        primerTurno()
     }
-    
-}
+        if (vidaRival > 0){ //Si con el ataque de pokemonElegido mato al rival ya no dejo que programe otro ataque
+            if (ataquesDe2TurnosRival == true){
+                alert(`El ${nombrePokemonRival} rival descargó el poder del SOLARBEAM!`)
+                comprobarSiElAtaqueEsEfectivoRival()
+                ataquesDe2TurnosRival = false
+            }else{
+                seleccionAtaqueRival()
+                segundoTurno()
+            }    
+        }
+    }
+            
+        
+
+      
 
 
 
@@ -346,8 +353,4 @@ if (vida > 0){
 } else {
     alert(`${nombrePokemonElegido} cayó rendido al suelo, has perdido la batalla`)
 }
-
-
-
-                                                                    
 
